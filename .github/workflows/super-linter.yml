@@ -1,0 +1,59 @@
+# This workflow executes several linters on changed files based on languages used in your code base whenever
+# you push a code or open a pull request.
+#
+# You can adjust the behavior by modifying this file.
+# For more information, see:
+# https://github.com/github/super-linter
+name: Lint Code Base
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+jobs:          
+  node-linux:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/setup-node@v3
+
+      - run: |
+          npm install http          
+          
+      - uses: actions/upload-artifact@v3
+        with:
+          path: node_modules
+          name: node_modules
+  
+  node-windows:
+    runs-on: windows-latest
+    needs: node-linux
+    steps:
+      - uses: actions/setup-node@v3
+      
+      - uses: actions/download-artifact@v3
+        with:
+          name: node_modules
+          path: node_modules
+      
+      - run: |
+          npm install http
+    
+  node-mac:
+    runs-on: macos-latest
+    needs: node-linux
+    steps:
+      - uses: actions/setup-node@v3
+      
+      - uses: actions/download-artifact@v3
+        with:
+          name: node_modules        
+          path: node_modules
+      
+      - run: |
+          npm install http
+      
+    
+          
+          
+      
